@@ -7,17 +7,18 @@ const Row = styled.div`
     css`
       flex-direction: row;
       align-items: center;
+      justify-content: space-between;
     `}
   ${(props) =>
     props.direction === "vertical" &&
     css`
       flex-direction: column;
-      gap: 4px;
+      gap: 1.6rem;
     `}
 `;
 
 Row.defaultProps = {
-  direction: "horizontal",
+  direction: "vertical",
 };
 
 export default Row;

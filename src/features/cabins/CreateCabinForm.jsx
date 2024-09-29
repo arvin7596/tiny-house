@@ -4,30 +4,43 @@ import Button from "../../ui/Button";
 import FileInput from "../../ui/FileInput";
 import Textarea from "../../ui/Textarea";
 import { useForm } from "react-hook-form";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createCabin } from "../../services/apiCabins";
-import toast from "react-hot-toast";
 import FormRow from "../../ui/FormRow";
+import { useCreateCabin } from "./useCreateCabin";
+import { useEditCabin } from "./useEditCabin";
 
-function CreateCabinForm() {
-  const { register, handleSubmit, reset, formState, getValues } = useForm();
-  const { errors } = formState;
-  const queryClient = useQueryClient();
-  const { mutate, isLoading } = useMutation({
-    mutationFn: createCabin,
-    onSuccess: () => {
-      toast.success("Cabin successfully created");
-      queryClient.invalidateQueries({
-        queryKey: ["cabins"],
-      });
-      reset();
-    },
-    onError: (err) => toast.error(err.massage),
+function CreateCabinForm({ cabinToEdit = {} }) {
+  const { id: editId, ...editValues } = cabinToEdit;
+  const isEdit = Boolean(editId);
+  const { register, handleSubmit, reset, formState, getValues } = useForm({
+    defaultValues: isEdit ? editValues : {},
   });
+  const { errors } = formState;
+  const { isLoadingCreate, createCabin } = useCreateCabin();
+  const { isLoadingEdit, editCabin } = useEditCabin();
+
   function onSubmit(data) {
-    mutate({ ...data, image: data.image[0] });
-    console.log(data);
+    const image = typeof data.image === "string" ? data.image : data.image[0];
+
+    if (isEdit)
+      editCabin(
+        { newCabinData: { ...data, image }, id: editId },
+        {
+          onSuccess: (data) => {
+            reset();
+          },
+        }
+      );
+    else
+      createCabin(
+        { ...data, image: image },
+        {
+          onSuccess: (data) => {
+            reset();
+          },
+        }
+      );
   }
+
   function onError(error) {
     console.log(error);
   }
@@ -90,7 +103,9 @@ function CreateCabinForm() {
         <FileInput
           id="image"
           accept="image/*"
-          {...register("image", { required: "This field is required" })}
+          {...register("image", {
+            required: isEdit ? false : "This field is required",
+          })}
         />
       </FormRow>
 
@@ -99,7 +114,9 @@ function CreateCabinForm() {
         <Button variation="secondary" type="reset">
           Cancel
         </Button>
-        <Button disabled={isLoading}>Create cabin</Button>
+        <Button disabled={isEdit ? isLoadingEdit : isLoadingCreate}>
+          {isEdit ? "Edit cabin" : "Create new cabin"}
+        </Button>
       </FormRow>
     </Form>
   );

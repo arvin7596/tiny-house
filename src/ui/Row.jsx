@@ -3,14 +3,14 @@ import styled, { css } from "styled-components";
 const Row = styled.div`
   display: flex;
   ${(props) =>
-    props.direction === "horizontal" &&
+    props.type === "horizontal" &&
     css`
       flex-direction: row;
       align-items: center;
       justify-content: space-between;
     `}
   ${(props) =>
-    props.direction === "vertical" &&
+    props.type === "vertical" &&
     css`
       flex-direction: column;
       gap: 1.6rem;
@@ -18,7 +18,7 @@ const Row = styled.div`
 `;
 
 Row.defaultProps = {
-  direction: "vertical",
+  type: "vertical",
 };
 
 export default Row;

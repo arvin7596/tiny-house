@@ -33,8 +33,8 @@ function BookingDetail() {
   const navigate = useNavigate();
   const { checkout, isCheckingOut } = useCheckout();
   const { deleteBooking, isLoadingBooking } = useDeleteBooking();
-
   if (isLoading) return <Spinner />;
+
   return (
     <>
       <Row type="horizontal">

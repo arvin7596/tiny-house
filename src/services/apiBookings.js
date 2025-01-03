@@ -2,19 +2,22 @@ import { PAGE_SIZE } from "../utils/constants";
 import { getToday } from "../utils/helpers";
 import supabase from "./supabase";
 
-
 export async function getBookings({ filter, sortBy, page }) {
-  let query = supabase.from("bookings")
+  let query = supabase
+    .from("bookings")
     .select(
       "id, created_at, startDate, endDate, numNights, numGuests, status, totalPrice, cabins(name), guests(fullName, email)",
       { count: "exact" }
     );
 
-  // FILTER  
-  if (filter) query = query.eq(filter.field, filter.value)
+  // FILTER
+  if (filter) query = query.eq(filter.field, filter.value);
 
   //SORT
-  if (sortBy) query = query.order(sortBy.field, { ascending: sortBy.direction === "asc" })
+  if (sortBy)
+    query = query.order(sortBy.field, {
+      ascending: sortBy.direction === "asc",
+    });
   // PAGINATION
   if (page) {
     const from = (page - 1) * PAGE_SIZE;
@@ -22,19 +25,15 @@ export async function getBookings({ filter, sortBy, page }) {
     query = query.range(from, to);
   }
 
-  const { data, error, count } = await query
+  const { data, error, count } = await query;
 
   if (error) {
     console.error(error);
     throw new Error("Bookings are not found");
   }
 
-
-
-
   return { data, count };
 }
-
 
 export async function getBooking(id) {
   console.log(id);
@@ -92,7 +91,7 @@ export async function getStaysTodayActivity() {
     .from("bookings")
     .select("*, guests(fullName, nationality, countryFlag)")
     .or(
-      `and(status.eq.unconfirmed,startDate.eq.${getToday()}),and(status.eq.checked-in,endDate.eq.${getToday()})`
+      `status.eq.unconfirmed,and(status.eq.checked-in,endDate.eq.${getToday()})`
     )
     .order("created_at");
 

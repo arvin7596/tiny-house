@@ -10,7 +10,6 @@ import PageNotFound from "./pages/PageNotFound";
 import GlobalStyle from "./styles/GlobalStyle";
 import AppLayout from "./ui/AppLayout";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { Toaster } from "react-hot-toast";
 import Booking from "./pages/Booking";
 import Checkin from "./pages/Checkin";
@@ -30,7 +29,6 @@ function App() {
   return (
     <DarkModeProvider>
       <QueryClientProvider client={queryClients}>
-        {/* <ReactQueryDevtools initialIsOpen={false} /> */}
         <GlobalStyle />
         <BrowserRouter>
           <Routes>

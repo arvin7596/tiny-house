@@ -2,6 +2,7 @@ import { Outlet } from "react-router-dom";
 import Header from "./Header";
 import Sidebar from "./Sidebar";
 import styled from "styled-components";
+import useUser from "../features/authentication/useUser";
 
 const StyledAppLayout = styled.div`
   display: grid;
@@ -21,14 +22,30 @@ const Container = styled.div`
   flex-direction: column;
   gap: 3.2rem;
 `;
+const GuestBanner = styled.div`
+  color: var(--color-orange-700);
+  background-color: var(--color-orange-100);
+  padding: 1.6rem;
+  border-radius: var(--border-radius-md);
+  font-size: 1.4rem;
+  font-weight: 500;
+  text-align: start;
+`;
 
 function AppLayout() {
+  const { isAnonymous } = useUser();
   return (
     <StyledAppLayout>
       <Header />
       <Sidebar />
       <Main>
         <Container>
+          {isAnonymous && (
+            <GuestBanner>
+              You're currently logged in as a guest. Some features may be
+              restricted.
+            </GuestBanner>
+          )}
           <Outlet />
         </Container>
       </Main>

@@ -7,13 +7,14 @@ import Table from "../../ui/Table";
 import { formatCurrency } from "../../utils/helpers";
 import { formatDistanceFromNow } from "../../utils/helpers";
 import Menus from "../../ui/Menus";
-import { HiArrowCircleUp, HiEye } from "react-icons/hi";
+import { HiEye } from "react-icons/hi";
 import { useNavigate } from "react-router-dom";
-import { HiCheck, HiTrash } from "react-icons/hi2";
+import { HiArrowUpOnSquare, HiCheck, HiTrash } from "react-icons/hi2";
 import { useCheckout } from "../check-in-out/useCheckout";
 import Modal from "../../ui/Modal";
 import ConfirmDelete from "../../ui/ConfirmDelete";
 import { useDeleteBooking } from "./useDeleteBooking";
+import useUser from "../authentication/useUser";
 
 const Cabin = styled.div`
   font-size: 1.6rem;
@@ -63,9 +64,9 @@ function BookingRow({
   };
 
   const navigate = useNavigate();
-  const { checkout } = useCheckout();
+  const { checkout, isCheckingOut } = useCheckout();
   const { deleteBooking, isLoadingBooking } = useDeleteBooking();
-
+  const { isAnonymous } = useUser();
   return (
     <Table.Row>
       <Cabin>{cabinName}</Cabin>
@@ -112,24 +113,24 @@ function BookingRow({
             )}
             {status === "checked-in" && (
               <Menus.Button
-                onClick={() => {
-                  checkout(bookingId);
-                  navigate(`/}`);
-                }}
-                icon={<HiArrowCircleUp />}
+                icon={<HiArrowUpOnSquare />}
+                onClick={() => checkout(bookingId)}
+                disabled={isCheckingOut || isAnonymous}
               >
                 Check out
               </Menus.Button>
             )}
             <Modal.Open opens="delete">
-              <Menus.Button icon={<HiTrash />}>Delete</Menus.Button>
+              <Menus.Button disabled={isAnonymous} icon={<HiTrash />}>
+                Delete
+              </Menus.Button>
             </Modal.Open>
           </Menus.List>
         </Menus>
         <Modal.Window name="delete">
           <ConfirmDelete
             resourceName="bookings"
-            disabled={isLoadingBooking}
+            disabled={isLoadingBooking || isAnonymous}
             onConfirm={() => deleteBooking(bookingId)}
           />
         </Modal.Window>

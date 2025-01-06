@@ -10,6 +10,9 @@ function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { login, isLoginLoading } = useLogin();
+  function guestSubmit() {
+    login({ isGuest: true });
+  }
   function handleSubmit(e) {
     e.preventDefault();
     if (!email || !password) return;
@@ -42,6 +45,11 @@ function LoginForm() {
       <FormRowVertical>
         <Button size="large">
           {isLoginLoading ? <SpinnerMini /> : "Login"}
+        </Button>
+      </FormRowVertical>
+      <FormRowVertical>
+        <Button type="button" onClick={guestSubmit} size="large">
+          Continue as Guest
         </Button>
       </FormRowVertical>
     </Form>

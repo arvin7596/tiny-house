@@ -7,6 +7,7 @@ import { useForm } from "react-hook-form";
 import FormRow from "../../ui/FormRow";
 import { useCreateCabin } from "./useCreateCabin";
 import { useEditCabin } from "./useEditCabin";
+import useUser from "../authentication/useUser";
 
 function CreateCabinForm({ cabinToEdit = {}, onClose }) {
   const { id: editId, ...editValues } = cabinToEdit;
@@ -17,6 +18,7 @@ function CreateCabinForm({ cabinToEdit = {}, onClose }) {
   const { errors } = formState;
   const { isLoadingCreate, createCabin } = useCreateCabin();
   const { isLoadingEdit, editCabin } = useEditCabin();
+  const { isAnonymous } = useUser();
 
   function onSubmit(data) {
     const image = typeof data.image === "string" ? data.image : data.image[0];
@@ -117,7 +119,9 @@ function CreateCabinForm({ cabinToEdit = {}, onClose }) {
         <Button variation="secondary" type="reset" onClick={onClose}>
           Cancel
         </Button>
-        <Button disabled={isEdit ? isLoadingEdit : isLoadingCreate}>
+        <Button
+          disabled={isAnonymous || (isEdit ? isLoadingEdit : isLoadingCreate)}
+        >
           {isEdit ? "Edit cabin" : "Create new cabin"}
         </Button>
       </FormRow>

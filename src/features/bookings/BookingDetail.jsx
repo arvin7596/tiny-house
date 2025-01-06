@@ -16,6 +16,7 @@ import Modal from "../../ui/Modal";
 import ConfirmDelete from "../../ui/ConfirmDelete";
 import { useDeleteBooking } from "./useDeleteBooking";
 import Empty from "../../ui/Empty";
+import useUser from "../authentication/useUser";
 
 const HeadingGroup = styled.div`
   display: flex;
@@ -34,6 +35,7 @@ function BookingDetail() {
   const navigate = useNavigate();
   const { checkout, isCheckingOut } = useCheckout();
   const { deleteBooking, isLoadingBooking } = useDeleteBooking();
+  const { isAnonymous } = useUser();
   if (isLoading) return <Spinner />;
   if (!booking) return <Empty resource="booking" />;
   return (
@@ -58,7 +60,7 @@ function BookingDetail() {
         )}
         {booking.status === "checked-in" && (
           <Button
-            disabled={isCheckingOut}
+            disabled={isCheckingOut || isAnonymous}
             onClick={() => {
               checkout(booking.id);
             }}
@@ -73,7 +75,7 @@ function BookingDetail() {
           <Modal.Window name="delete">
             <ConfirmDelete
               resourceName="bookings"
-              disabled={isLoadingBooking}
+              disabled={isLoadingBooking || isAnonymous}
               onConfirm={() =>
                 deleteBooking(booking.id, { onSettled: () => navigate(-1) })
               }

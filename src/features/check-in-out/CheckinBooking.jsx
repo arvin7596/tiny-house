@@ -15,6 +15,7 @@ import { useCheckin } from "./useCheckin";
 import { useEffect, useState } from "react";
 import { useSetting } from "../settings/useSetting";
 import { formatCurrency } from "../../utils/helpers";
+import useUser from "../authentication/useUser";
 
 const Box = styled.div`
   /* Box */
@@ -32,6 +33,7 @@ function CheckinBooking() {
   const { booking, isLoading } = useBooking();
   const { checkin, isCheckingIn } = useCheckin();
   const { isLoading: isSettingLoading, data: setting } = useSetting();
+  const { isAnonymous } = useUser();
   useEffect(() => setIsPaidChecked(booking?.isPaid ?? false), [booking]);
 
   if (isLoading || isSettingLoading) return <Spinner />;
@@ -59,7 +61,6 @@ function CheckinBooking() {
     }
     checkin({ bookingId, breakfast: {} });
   }
-  // if (isPaidChecked) return;
 
   return (
     <>
@@ -87,7 +88,7 @@ function CheckinBooking() {
         <Checkbox
           checked={isPaidChecked}
           onChange={() => setIsPaidChecked((pre) => !pre)}
-          disabled={isPaidChecked || isCheckingIn}
+          disabled={isPaidChecked || isCheckingIn || isAnonymous}
         >
           I confirm that {guests.fullName} has paid the total{" "}
           {!addBreakfast
@@ -101,7 +102,7 @@ function CheckinBooking() {
       </Box>
       <ButtonGroup>
         <Button
-          disabled={!isPaidChecked || isCheckingIn}
+          disabled={!isPaidChecked || isCheckingIn || isAnonymous}
           onClick={handleCheckin}
         >
           Check in booking #{bookingId}

@@ -4,6 +4,7 @@ import Form from "../../ui/Form";
 import FormRow from "../../ui/FormRow";
 import Input from "../../ui/Input";
 import { useSignup } from "./useSignup";
+import useUser from "./useUser";
 
 // Email regex: /\S+@\S+\.\S+/
 
@@ -11,6 +12,7 @@ function SignupForm() {
   const { register, handleSubmit, getValues, formState, reset } = useForm();
   const { errors } = formState;
   const { signup, isSignupLoading } = useSignup();
+  const { isAnonymous } = useUser();
   function onSubmit({ fullName, email, password }) {
     signup(
       { fullName, email, password },
@@ -73,18 +75,20 @@ function SignupForm() {
         />
       </FormRow>
 
-      <FormRow>
-        {/* type is an HTML attribute! */}
-        <Button
-          variation="secondary"
-          type="reset"
-          disabled={isSignupLoading}
-          onClick={reset}
-        >
-          Cancel
-        </Button>
-        <Button disabled={isSignupLoading}>Create new user</Button>
-      </FormRow>
+      {!isAnonymous && (
+        <FormRow>
+          {/* type is an HTML attribute! */}
+          <Button
+            variation="secondary"
+            type="reset"
+            disabled={isSignupLoading}
+            onClick={reset}
+          >
+            Cancel
+          </Button>
+          <Button disabled={isSignupLoading}>Create new user</Button>
+        </FormRow>
+      )}
     </Form>
   );
 }

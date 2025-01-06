@@ -7,6 +7,7 @@ import {
   HiOutlineHomeModern,
   HiOutlineUsers,
 } from "react-icons/hi2";
+import useUser from "../features/authentication/useUser";
 
 const NavList = styled.ul`
   display: flex;
@@ -53,6 +54,7 @@ const StyledNavLink = styled(NavLink)`
 `;
 
 function MainNav() {
+  const { isAnonymous } = useUser();
   return (
     <nav>
       <NavList>
@@ -74,12 +76,14 @@ function MainNav() {
             <span>Cabins</span>
           </StyledNavLink>
         </li>
-        <li>
-          <StyledNavLink to="/users">
-            <HiOutlineUsers />
-            <span>Users</span>
-          </StyledNavLink>
-        </li>
+        {!isAnonymous && (
+          <li>
+            <StyledNavLink to="/users">
+              <HiOutlineUsers />
+              <span>Users</span>
+            </StyledNavLink>
+          </li>
+        )}
         <li>
           <StyledNavLink to="/settings">
             <HiOutlineCog6Tooth />

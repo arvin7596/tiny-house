@@ -1,6 +1,8 @@
 import styled from "styled-components";
 import MainNav from "./MainNav";
 import Logo from "./Logo";
+import Uploader from "./../data/Uploader";
+import useUser from "../features/authentication/useUser";
 
 const StyledSidebar = styled.aside`
   background-color: var(--color-grey-0);
@@ -13,10 +15,12 @@ const StyledSidebar = styled.aside`
 `;
 
 function Sidebar() {
+  const { isAnonymous } = useUser();
   return (
     <StyledSidebar>
       <Logo />
       <MainNav />
+      {!isAnonymous && <Uploader />}
     </StyledSidebar>
   );
 }

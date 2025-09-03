@@ -21,6 +21,7 @@ const Avatar = styled.img`
 `;
 
 function UserAvatar() {
+  const { isAnonymous } = useUser();
   const { user } = useUser();
   const { fullName, avatar } = user.user_metadata;
   return (
@@ -29,7 +30,7 @@ function UserAvatar() {
         src={avatar || "default-user.jpg"}
         alt={`Avatar of ${fullName}`}
       />
-      <span>{fullName}</span>
+      <span>{isAnonymous ? "Guest" : fullName}</span>
     </StyledUserAvatar>
   );
 }

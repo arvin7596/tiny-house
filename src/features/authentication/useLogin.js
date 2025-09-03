@@ -9,8 +9,9 @@ function useLogin() {
   const { mutate: login, isLoading: isLoginLoading } = useMutation({
     mutationFn: ({ isGuest, email, password }) =>
       isGuest ? loginAnonymous() : loginApi({ email, password }),
-    onSuccess: (user) => {
-      queryClient.setQueryData(["user", user.user]);
+    onSuccess: ({ data }) => {
+      // Store authenticated user in cache under a stable key
+      queryClient.setQueryData(["user"], data?.user ?? null);
       navigate("/dashboard", { replace: true });
     },
     onError: (err) => {

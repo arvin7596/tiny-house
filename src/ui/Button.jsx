@@ -28,6 +28,12 @@ const variations = {
     &:hover {
       background-color: var(--color-brand-700);
     }
+
+    &:disabled {
+      background-color: var(--color-grey-400);
+      color: var(--color-grey-600);
+      cursor: not-allowed;
+    }
   `,
   secondary: css`
     color: var(--color-grey-600);
@@ -37,6 +43,13 @@ const variations = {
     &:hover {
       background-color: var(--color-grey-50);
     }
+
+    &:disabled {
+      background-color: var(--color-grey-100);
+      color: var(--color-grey-500);
+      border-color: var(--color-grey-300);
+      cursor: not-allowed;
+    }
   `,
   danger: css`
     color: var(--color-red-100);
@@ -44,6 +57,12 @@ const variations = {
 
     &:hover {
       background-color: var(--color-red-800);
+    }
+
+    &:disabled {
+      background-color: var(--color-grey-400);
+      color: var(--color-grey-600);
+      cursor: not-allowed;
     }
   `,
 };
